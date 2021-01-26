@@ -24,16 +24,32 @@ export const translate = (word)=>{
         method: 'GET'
     };
 
-    const req = https.request(options, (res) => {
-        // console.log('状态码:', res.statusCode);
-        // console.log('请求头:', res.headers);
-        res.on('data', (d) => {
-            process.stdout.write(d);
+    const request = https.request(options, (response) => {
+        // console.log('状态码:', response.statusCode);
+        // console.log('请求头:', response.headers);
+
+        //监听请求到的结果，并把它变成字符串
+        let chunks = [];
+        response.on('data', (chunk) => {
+            chunks.push(chunk)
         });
+        response.on('end',()=>{
+            const string = Buffer.concat(chunks).toString();
+            //定义一个返回结果的类型
+            type BaiduResult={
+                error_code?:string;
+                error_msg?:string;
+                from:string;
+                to:string;
+                trans_result:{src:string,dst:string}[];
+            }
+            const object:BaiduResult = JSON.parse(string);
+            console.log(object.trans_result[0].dst)
+        })
     });
 
-    req.on('error', (e) => {
+    request.on('error', (e) => {
         console.error(e);
     });
-    req.end();
+    request.end();
 }
