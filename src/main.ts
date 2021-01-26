@@ -1,18 +1,32 @@
 import * as https from 'https';
+import * as querystring from 'querystring';
+import md5 = require('md5');
+import {appId, appSecert} from './private';
 
 export const translate = (word)=>{
 
+
+    const salt = Math.random()
+    const sign = md5(appId+word+salt+appSecert) ;
+
+    const query: string = querystring.stringify({
+        q: word,
+        from:'en',
+        to:'zh',
+        appid:appId,
+        salt:salt,
+        sign:sign
+    });
     const options = {
-        hostname: 'www.baidu.com',
+        hostname: 'api.fanyi.baidu.com',
         port: 443,
-        path: '/',
+        path: '/api/trans/vip/translate?'+query,
         method: 'GET'
     };
 
     const req = https.request(options, (res) => {
-        console.log('状态码:', res.statusCode);
-        console.log('请求头:', res.headers);
-
+        // console.log('状态码:', res.statusCode);
+        // console.log('请求头:', res.headers);
         res.on('data', (d) => {
             process.stdout.write(d);
         });
