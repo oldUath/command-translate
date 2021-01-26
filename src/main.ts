@@ -3,9 +3,15 @@ import * as querystring from 'querystring';
 import md5 = require('md5');
 import {appId, appSecert} from './private';
 
+const errorMap = {
+    52001:"请求超时",
+    52002:"系统错误",
+    52003:"未授权错误",
+    54000:"必填参数为空",
+    unknown:'服务器繁忙'
+}
+
 export const translate = (word)=>{
-
-
     const salt = Math.random()
     const sign = md5(appId+word+salt+appSecert) ;
 
@@ -45,7 +51,7 @@ export const translate = (word)=>{
             }
             const object:BaiduResult = JSON.parse(string);
             if(object.error_code){
-                console.log(object.error_msg);
+                console.log(errorMap[object.error_code] || object.error_msg);
                 //退出当前任务
                 process.exit(2)
             }else {
