@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 //存放commander命令行
 import {translate} from './main';
 
