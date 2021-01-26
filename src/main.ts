@@ -3,7 +3,12 @@ import * as querystring from 'querystring';
 import md5 = require('md5');
 import {appId, appSecert} from './private';
 
-const errorMap = {
+
+//严谨的使用typescript
+type errorMap={
+    [key:string]:string
+}
+const errorMap:errorMap = {
     52001:"请求超时",
     52002:"系统错误",
     52003:"未授权错误",
@@ -11,7 +16,7 @@ const errorMap = {
     unknown:'服务器繁忙'
 }
 
-export const translate = (word)=>{
+export const translate = (word:string)=>{
     const salt = Math.random()
     const sign = md5(appId+word+salt+appSecert) ;
     let from,to;
@@ -45,8 +50,8 @@ export const translate = (word)=>{
         // console.log('请求头:', response.headers);
 
         //监听请求到的结果，并把它变成字符串
-        let chunks = [];
-        response.on('data', (chunk) => {
+        let chunks:Buffer[] = [];
+        response.on('data', (chunk:Buffer) => {
             chunks.push(chunk)
         });
         response.on('end',()=>{
