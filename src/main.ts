@@ -44,7 +44,15 @@ export const translate = (word)=>{
                 trans_result:{src:string,dst:string}[];
             }
             const object:BaiduResult = JSON.parse(string);
-            console.log(object.trans_result[0].dst)
+            if(object.error_code){
+                console.log(object.error_msg);
+                //退出当前任务
+                process.exit(2)
+            }else {
+                console.log(object.trans_result[0].dst)
+                //退出当前进程，0表示没有错误
+                process.exit(0)
+            }
         })
     });
 
