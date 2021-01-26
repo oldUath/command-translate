@@ -14,14 +14,24 @@ const errorMap = {
 export const translate = (word)=>{
     const salt = Math.random()
     const sign = md5(appId+word+salt+appSecert) ;
+    let from,to;
+    if (/[a-zA-Z]/.test(word[0])) {
+        //英译中
+        from='en';
+        to='zh';
+    }else{
+        //中译英
+        from='zh';
+        to='en';
+    }
 
     const query: string = querystring.stringify({
         q: word,
-        from:'en',
-        to:'zh',
+        from,
+        to,
         appid:appId,
-        salt:salt,
-        sign:sign
+        salt,
+        sign
     });
     const options = {
         hostname: 'api.fanyi.baidu.com',
